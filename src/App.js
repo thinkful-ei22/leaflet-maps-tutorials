@@ -38,7 +38,7 @@ class App extends Component {
       addressLine: '551 NW 19th Ave',
       key: 'Av25hukp36GNb2z84eLlEqTM89_Ac6TK04lIvT6yraWADNTKr8YJFQ1DpR3Dac6g'
     }
-    let array = [];
+
     let latitude;
     let longitude;
     axios.get(`http://dev.virtualearth.net/REST/v1/Locations/US/${location.adminDistrict}/${location.postalCode}/${location.locality}/${location.addressLine}?o=json&key=${location.key}`)
@@ -47,10 +47,14 @@ class App extends Component {
       console.log("Longitude", res.data.resourceSets[0].resources[0].point.coordinates[1])
       latitude = res.data.resourceSets[0].resources[0].point.coordinates[0];
       longitude = res.data.resourceSets[0].resources[0].point.coordinates[1];
-      array.push(latitude);
-      array.push(longitude);
-      console.log(array)
-      return array;
+      this.setState({
+        selectedlocation: {
+          lat: latitude,
+          lng: longitude
+        }
+      })
+      console.log(res)
+      return res.status('200')
     })
     .catch(err => console.log(err))
   }
@@ -86,31 +90,31 @@ class App extends Component {
     const position = [this.state.userlocation.lat, this.state.userlocation.lng]
     const position2 = [this.state.selectedlocation.lat, this.state.selectedlocation.lng]
     return (
-      <Map className="map" center={position} zoom={this.state.zoom}>
-        <TileLayer
-          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {
-          this.state.haveUsersLocation ?
-            <Marker
-              position={position}
-              icon={myIcon}
-            >
-              <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-              </Popup>
-            </Marker> : ''
-        }
-        <Marker
-          position={position2}
-          icon={myIcon}
-        >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-      </Map>
+        <Map className="map" center={position} zoom={this.state.zoom}>
+          <TileLayer
+            attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {
+            this.state.haveUsersLocation ?
+              <Marker
+                position={position}
+                icon={myIcon}
+              >
+                <Popup>
+                  A pretty CSS3 popup. <br /> Easily customizable.
+                </Popup>
+              </Marker> : ''
+          }
+          <Marker
+            position={position2}
+            icon={myIcon}
+          >
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+          </Marker>
+        </Map>
     );
   }
 }
