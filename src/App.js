@@ -13,13 +13,17 @@ var myIcon = L.icon({
 })
 
 class App extends Component {
-  state = {
-    location: {
-      lat: 51.505,
-      lng: -0.09,
-    },
-    haveUsersLocation: false,
-    zoom: 2,
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      userlocation: {
+        lat: 51.505,
+        lng: -0.09,
+      },
+      haveUsersLocation: false,
+      zoom: 2,
+    }
   }
 
   geocode() {
@@ -50,7 +54,7 @@ class App extends Component {
   componentDidMount() {
     navigator.geolocation.getCurrentPosition((position) => {
       this.setState({
-        location: {
+        userlocation: {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         },
@@ -64,7 +68,7 @@ class App extends Component {
         .then(location => {
           console.log(location);
           this.setState({
-            location: {
+            userlocation: {
               lat: location.latitude,
               lng: location.longitude
             },
@@ -75,7 +79,7 @@ class App extends Component {
     });
   }
   render() {
-    const position = [this.state.location.lat, this.state.location.lng]
+    const position = [this.state.userlocation.lat, this.state.userlocation.lng]
     const position2 = this.geocode();
     return (
       <Map className="map" center={position} zoom={this.state.zoom}>
