@@ -24,21 +24,26 @@ class App extends Component {
 
   geocode() {
     var location = {
-      addressLine: '2810 gypsum circle',
-      locality: 'Naperville',
-      adminDistrict: 'IL',
-      postalCode: 60564
+      adminDistrict: 'OR',
+      postalCode: 97209,
+      locality: 'Portland',
+      addressLine: '551 NW 19th Ave',
+      key: 'Av25hukp36GNb2z84eLlEqTM89_Ac6TK04lIvT6yraWADNTKr8YJFQ1DpR3Dac6g'
     }
-    axios.get('http://dev.virtualearth.net/REST/v1/Locations/US/', {
-      params: {
-        addressLine: location.addressLine,
-        locality: location.locality,
-        adminDistrict: location.adminDistrict,
-        postalCode: location.postalCode,
-        key: 'Av25hukp36GNb2z84eLlEqTM89_Ac6TK04lIvT6yraWADNTKr8YJFQ1DpR3Dac6g',
-      }
+    let array = [];
+    let latitude;
+    let longitude;
+    axios.get(`http://dev.virtualearth.net/REST/v1/Locations/US/${location.adminDistrict}/${location.postalCode}/${location.locality}/${location.addressLine}?o=json&key=${location.key}`)
+    .then(res => {
+      console.log("Latitude", res.data.resourceSets[0].resources[0].point.coordinates[0])
+      console.log("Longitude", res.data.resourceSets[0].resources[0].point.coordinates[1])
+      latitude = res.data.resourceSets[0].resources[0].point.coordinates[0];
+      longitude = res.data.resourceSets[0].resources[0].point.coordinates[1];
+      array.push(latitude);
+      array.push(longitude);
+      console.log(array)
+      return array;
     })
-    .then(res => console.log(res))
     .catch(err => console.log(err))
   }
 
@@ -71,6 +76,7 @@ class App extends Component {
   }
   render() {
     const position = [this.state.location.lat, this.state.location.lng]
+    const position2 = this.geocode();
     return (
       <Map className="map" center={position} zoom={this.state.zoom}>
         <TileLayer
@@ -88,7 +94,7 @@ class App extends Component {
               </Popup>
             </Marker> : ''
         }
-        {this.geocode()}
+        {console.log("This is in the return", position2)}
       </Map>
     );
   }
