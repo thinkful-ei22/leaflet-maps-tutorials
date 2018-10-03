@@ -21,6 +21,10 @@ class App extends Component {
         lat: 51.505,
         lng: -0.09,
       },
+      selectedlocation: {
+        lat: 45.5267330532144,
+        lng: -122.690454407214
+      },
       haveUsersLocation: false,
       zoom: 2,
     }
@@ -80,7 +84,7 @@ class App extends Component {
   }
   render() {
     const position = [this.state.userlocation.lat, this.state.userlocation.lng]
-    const position2 = this.geocode();
+    const position2 = [this.state.selectedlocation.lat, this.state.selectedlocation.lng]
     return (
       <Map className="map" center={position} zoom={this.state.zoom}>
         <TileLayer
@@ -98,7 +102,14 @@ class App extends Component {
               </Popup>
             </Marker> : ''
         }
-        {console.log("This is in the return", position2)}
+        <Marker
+          position={position2}
+          icon={myIcon}
+        >
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
       </Map>
     );
   }
